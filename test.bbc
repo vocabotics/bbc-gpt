@@ -1,0 +1,28 @@
+10 REM setup serial port
+20 *FX3,7
+30 *FX8,7
+40 *FX7,7
+50 *FX2,1
+60 *FX21,1
+70 *FX21,2
+
+100 REM send request to server
+110 A$ = "[[START]]Hello, how are you today?[[END]]" + CHR$(13)
+120 FOR I = 1 TO LEN(A$)
+130   VDU ASC(MID$(A$, I, 1))
+140 NEXT I
+
+200 REM receive response from server
+210 A$ = ""
+220 REPEAT
+230   IF INKEY(0)<>-1 THEN A$ += CHR$(GET)
+240 UNTIL INKEY(0)=-1
+250 PRINT A$
+
+300 REM done
+310 *FX3,0
+320 *FX2,0
+330 END
+
+
+RUN

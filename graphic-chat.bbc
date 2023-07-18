@@ -1,0 +1,41 @@
+10 REM setup serial port
+20 *FX3,7
+30 *FX8,7
+40 *FX7,7
+50 *FX2,1
+60 *FX21,1
+70 *FX21,2
+
+80 MODE 7
+90 VDU 23,1,0;0;0;0;
+100 PRINT CHR$(141); STRING$(38, "-")
+110 PRINT "|         ChatGPT         |"
+120 PRINT STRING$(38, "-")
+
+130 PRINT "Chat program started. Type 'EXIT' to end."
+
+140 REM chat loop
+150 REPEAT
+160   VDU 23,1,0;0;0;0;
+170   INPUT "Enter your message: ",A$
+180   IF A$ = "EXIT" THEN EXIT
+190   A$ = "[[START]]" + A$ + "[[END]]" + CHR$(13)
+200   FOR I = 1 TO LEN(A$)
+210     VDU ASC(MID$(A$, I, 1))
+220   NEXT I
+
+230   REM receive response from server
+240   A$ = ""
+250   REPEAT
+260     IF INKEY(0)<>-1 THEN A$ += CHR$(GET)
+270   UNTIL INKEY(0)=-1
+280   PRINT "Server response: ";A$
+290 UNTIL FALSE
+
+300 REM done
+310 *FX3,0
+320 *FX2,0
+330 PRINT "Chat program ended."
+340 END
+
+RUN
