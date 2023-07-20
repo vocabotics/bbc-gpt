@@ -1,0 +1,42 @@
+10 REM Setup serial port
+20 *FX3,7
+30 *FX8,7
+40 *FX7,7
+50 *FX2,1
+60 *FX21,1
+70 *FX21,2
+
+
+
+10 *FX3,5 
+20 *FX7,7 
+30 *FX8,7 
+40 *FX2,1 
+80 PRINT "Chat program started. Type 'EXIT' to end."
+
+90 REM Chat loop
+100 REPEAT
+110   INPUT "Enter your message: "; A$
+120   IF A$ = "EXIT" THEN EXIT
+130   A$ = "[[START]]" + A$ + "[[END]]" + CHR$(13)
+140   FOR I = 1 TO LEN(A$)
+150     VDU ASC(MID$(A$, I, 1))
+160   NEXT I
+
+170   REM Receive response from server
+180   A$ = ""
+190   REPEAT
+200     IF INKEY(0) > 0 THEN A$ = A$ + CHR$(GET)
+210   UNTIL INKEY(0) = -1
+220   PRINT "Server response: " + A$
+230 UNTIL FALSE
+
+300 REM Cleanup
+310 *FX3,0
+320 *FX2,0
+330 PRINT "Chat program ended."
+340 END
+
+
+RUN
+
